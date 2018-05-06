@@ -29,14 +29,36 @@ public class CheckerApp extends Application{
                 board[x][y] = tile;
 
                 tileGroup.getChildren().add(tile);
+
+                Piece piece = null;
+
+                if (y <= 2 && (x + y) % 2 != 0) {
+                    piece = makePiece(PieceType.Black, x, y);
+                }
+
+                if (y >= 5 && (x + y) % 2 != 0) {
+                    piece = makePiece(PieceType.White, x, y);
+                }
+
+                if (piece != null) {
+                    tile.setPiece(piece);
+                    pieceGroup.getChildren().add(piece);
+                }
             }
-        }
+		}
 		
 		
 		return root;
 	}
 
 	
+	private Piece makePiece(PieceType type, int x, int y) {
+		Piece piece = new Piece(type , x , y);
+		
+		return piece;
+	}
+
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		Scene scene = new Scene(createContent());
