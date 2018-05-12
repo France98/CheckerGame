@@ -56,20 +56,22 @@ public class CheckerApp extends Application {
 		if (board[newX][newY].hasPiece() || (newX + newY) % 2 == 0) {
 			return new MoveResult(MoveType.NONE);
 		}
-
 		int x0 = toBoard(piece.getOldX());
 		int y0 = toBoard(piece.getOldY());
 
 		if (Math.abs(newX - x0) == 1 && newY - y0 == piece.getType().moveD) {
 			return new MoveResult(MoveType.NORMAL);
-		} else if (Math.abs(newX - x0) == 2 && newY - y0 == piece.getType().moveD * 2) {
+		} else if (Math.abs(newX - x0) == 2 && ((newY - y0 == piece.getType().moveD * 2 && !piece.isKing()) || (Math.abs(newY - y0) == 2 && piece.isKing() ))) {
 
-			int x1 = x0 + (newX - x0) / 2;
-			int y1 = y0 + (newY - y0) / 2;
+            int x1 = x0 + (newX - x0) / 2;
+            int y1 = y0 + (newY - y0) / 2;
 
-			if (board[x1][y1].hasPiece() && board[x1][y1].getPiece().getType() != piece.getType()) {
-				return new MoveResult(MoveType.KILL, board[x1][y1].getPiece());
-			}
+            if (board[x1][y1].hasPiece() && board[x1][y1].getPiece().getType() != piece.getType()) {
+                return new MoveResult(MoveType.KILL, board[x1][y1].getPiece());
+            }
+        }
+		 else if ((Math.abs(newX - x0) == 1 && (Math.abs(newY - y0) == 1)  && piece.isKing())) {
+			return new MoveResult(MoveType.NORMAL);
 		}
 
 		return new MoveResult(MoveType.NONE);
@@ -89,12 +91,25 @@ public class CheckerApp extends Application {
 
 	private Piece makePiece(PieceType type, int x, int y) {
 		Piece piece = new Piece(type, x, y);
-		Piece king = new Piece(type.KWHITE, x, y);
-		Piece temp = piece;
 		piece.setOnMouseReleased(e -> {
+			for (int i = 0; i < 7; i++) {
+				if (board[i][0].hasPiece()) {
+					if (board[i][0].getPiece().getType() == type.WHITE) {
+						board[i][0].getPiece().setKing();
+					}
+				}
+			}
+			for (int i = 0; i < 7; i++) {
+				if (board[i][7].hasPiece()) {
+					if (board[i][7].getPiece().getType() == type.BLACK) {
+						board[i][7].getPiece().setKing();
+					}
+				}
+			}
 			int newX = toBoard(piece.getLayoutX());
 			int newY = toBoard(piece.getLayoutY());
-			if ((turn == false && piece.getType() == type.WHITE) || (turn == true && piece.getType() == type.BLACK)) {
+			if ((turn == false && (piece.getType() == type.WHITE))
+					|| (turn == true && (piece.getType() == type.BLACK))) {
 
 				MoveResult result;
 
@@ -114,14 +129,7 @@ public class CheckerApp extends Application {
 				case NORMAL:
 					piece.move(newX, newY);
 					board[x0][y0].setPiece(null);
-					if(newY == 7){
-						piece.setType(type.KWHITE);
-						board[newX][newY].setPiece(piece);
-					}else{
-						piece.setType(type.KWHITE);
-						board[x0][y0].setPiece(null);
-						board[newX][newY].setPiece(piece);
-					}
+					board[newX][newY].setPiece(piece);
 					break;
 				case KILL:
 					piece.move(newX, newY);
@@ -134,6 +142,21 @@ public class CheckerApp extends Application {
 					break;
 				default:
 					break;
+				}
+				
+				for (int i = 0; i < 7; i++) {
+					if (board[i][0].hasPiece()) {
+						if (board[i][0].getPiece().getType() == type.WHITE) {
+							board[i][0].getPiece().setKing();
+						}
+					}
+				}
+				for (int i = 0; i < 7; i++) {
+					if (board[i][7].hasPiece()) {
+						if (board[i][7].getPiece().getType() == type.BLACK) {
+							board[i][7].getPiece().setKing();
+						}
+					}
 				}
 				if (result.getType() != MoveType.NONE) {
 					turn = !turn;

@@ -12,7 +12,7 @@ public class Tile extends Rectangle{
         setHeight(100);
         
         relocate(x * TILESIZE, y * TILESIZE);
-        setFill(light ? Color.valueOf("#9f2b68") : Color.valueOf("#ff033e"));
+        setFill(light ? Color.valueOf("#DAF7A6") : Color.valueOf("#C0C0C0"));
 	}
 	
 	

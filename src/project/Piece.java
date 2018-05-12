@@ -10,9 +10,14 @@ public class Piece extends StackPane {
 
     private double mouseX, mouseY;
     private double oldX, oldY;
+    boolean isKing = false;
 
     public PieceType getType() {
         return type;
+    }
+    
+    public boolean isKing(){
+    	return isKing;
     }
 
     public double getOldX() {
@@ -25,12 +30,11 @@ public class Piece extends StackPane {
 
     public Piece(PieceType type, int x, int y) {
         this.type = type;
-
         move(x, y);
 
         Ellipse ellipse = new Ellipse(100 * 0.3125, 100 * 0.26);
         ellipse.setFill(type == PieceType.BLACK
-                ? Color.valueOf("#000000") : type == PieceType.KWHITE ? Color.valueOf("#000000") : Color.valueOf("#fff9f4"));
+                ? Color.valueOf("#808080"): Color.valueOf("#fff9f4"));
 
         ellipse.setStroke(Color.BLACK);
         ellipse.setStrokeWidth(100 * 0.03);
@@ -39,6 +43,7 @@ public class Piece extends StackPane {
         ellipse.setTranslateY((100 - 100 * 0.26 * 2) / 2);
 
         getChildren().addAll(ellipse);
+      
 
         setOnMousePressed(e -> {
             mouseX = e.getSceneX();
@@ -56,15 +61,30 @@ public class Piece extends StackPane {
         relocate(oldX, oldY);
     }
     
-    public void setType(PieceType type){
-    	this.type = type;
-    	Ellipse ellipse = new Ellipse(100 * 0.3125, 100 * 0.26);
+    public void setKing(){
+    	getChildren().removeAll();
+
+        Ellipse ellipse = new Ellipse(100 * 0.3125, 100 * 0.26);
         ellipse.setFill(type == PieceType.BLACK
-                ? Color.valueOf("#000000") : type == PieceType.KWHITE ? Color.valueOf("#000000") : Color.valueOf("#fff9f4"));
+                ? Color.valueOf("#000000"): Color.valueOf("#aaf9f4"));
 
         ellipse.setStroke(Color.BLACK);
-        getChildren().removeAll();
+        ellipse.setStrokeWidth(100 * 0.03);
+
+        ellipse.setTranslateX((100 - 100 * 0.3125 * 2) / 2);
+        ellipse.setTranslateY((100 - 100 * 0.26 * 2) / 2);
+        
         getChildren().addAll(ellipse);
+        isKing = true;
+        
+        setOnMousePressed(e -> {
+            mouseX = e.getSceneX();
+            mouseY = e.getSceneY();
+        });
+
+        setOnMouseDragged(e -> {
+            relocate(e.getSceneX() - mouseX + oldX, e.getSceneY() - mouseY + oldY);
+        });
     }
 
     public void abortMove() {
