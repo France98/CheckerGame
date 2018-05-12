@@ -12,6 +12,7 @@ public class CheckerApp extends Application {
     public static final int TILESIZE = 100;
     public static final int WIDTH = 8;
     public static final int HEIGHT = 8;
+    boolean turn = false;
 
     private Tile[][] board = new Tile[WIDTH][HEIGHT];
 
@@ -51,6 +52,7 @@ public class CheckerApp extends Application {
     }
 
     private MoveResult tryMove(Piece piece, int newX, int newY) {
+    	
         if (board[newX][newY].hasPiece() || (newX + newY) % 2 == 0) {
             return new MoveResult(MoveType.NONE);
         }
@@ -87,43 +89,44 @@ public class CheckerApp extends Application {
 
     private Piece makePiece(PieceType type, int x, int y) {
         Piece piece = new Piece(type, x, y);
-
-        piece.setOnMouseReleased(e -> {
-            int newX = toBoard(piece.getLayoutX());
-            int newY = toBoard(piece.getLayoutY());
-
-            MoveResult result;
-
-            if (newX < 0 || newY < 0 || newX >= WIDTH || newY >= HEIGHT) {
-                result = new MoveResult(MoveType.NONE);
-            } else {
-                result = tryMove(piece, newX, newY);
-            }
-
-            int x0 = toBoard(piece.getOldX());
-            int y0 = toBoard(piece.getOldY());
-
-            switch (result.getType()) {
-                case NONE:
-                    piece.abortMove();
-                    break;
-                case NORMAL:
-                    piece.move(newX, newY);
-                    board[x0][y0].setPiece(null);
-                    board[newX][newY].setPiece(piece);
-                    break;
-                case KILL:
-                    piece.move(newX, newY);
-                    board[x0][y0].setPiece(null);
-                    board[newX][newY].setPiece(piece);
-
-                    Piece otherPiece = result.getPiece();
-                    board[toBoard(otherPiece.getOldX())][toBoard(otherPiece.getOldY())].setPiece(null);
-                    pieceGroup.getChildren().remove(otherPiece);
-                    break;
-            }
-        });
-
+        if(turn == false && piece.getType() == type.WHITE){
+        	piece.setOnMouseReleased(e -> {
+            	int newX = toBoard(piece.getLayoutX());
+            	int newY = toBoard(piece.getLayoutY());
+            	
+            	MoveResult result;
+            	
+            	if (newX < 0 || newY < 0 || newX >= WIDTH || newY >= HEIGHT) {
+            		result = new MoveResult(MoveType.NONE);
+            	} else {
+            		result = tryMove(piece, newX, newY);
+            	}
+            	
+            	int x0 = toBoard(piece.getOldX());
+            	int y0 = toBoard(piece.getOldY());
+            	
+            	switch (result.getType()) {
+            	case NONE:
+            		piece.abortMove();
+            		break;
+            	case NORMAL:
+            		piece.move(newX, newY);
+            		board[x0][y0].setPiece(null);
+            		board[newX][newY].setPiece(piece);
+            		break;
+            	case KILL:
+            		piece.move(newX, newY);
+            		board[x0][y0].setPiece(null);
+            		board[newX][newY].setPiece(piece);
+            		
+            		Piece otherPiece = result.getPiece();
+            		board[toBoard(otherPiece.getOldX())][toBoard(otherPiece.getOldY())].setPiece(null);
+            		pieceGroup.getChildren().remove(otherPiece);
+            		break;
+            	}
+            });
+        	turn = !turn;
+        }
         return piece;
     }
 
