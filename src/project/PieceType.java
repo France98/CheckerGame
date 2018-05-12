@@ -2,12 +2,12 @@ package project;
 
 public enum PieceType {
 
-	Black(1) , White(-1) ,KingB(1) , KingW(-1);
+	BLACK(1), WHITE(-1);
 	
-	private final int MOVE;
+	final int moveD;
 	
-	PieceType(int move){
-		this.MOVE = move;
+	PieceType(int moveD){
+		this.moveD = moveD;
 	}
 
 }

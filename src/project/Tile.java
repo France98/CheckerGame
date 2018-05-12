@@ -5,13 +5,16 @@ import javafx.scene.shape.Rectangle;
 
 public class Tile extends Rectangle{
 	
+	public static final int TILESIZE = 100;
+	
 	public Tile(boolean light , int x , int y){
-		setWidth(CheckerApp.TILESIZE);
-        setHeight(CheckerApp.TILESIZE);
+		setWidth(100);
+        setHeight(100);
         
-        relocate(x * CheckerApp.TILESIZE, y * CheckerApp.TILESIZE);
+        relocate(x * TILESIZE, y * TILESIZE);
         setFill(light ? Color.valueOf("#9f2b68") : Color.valueOf("#ff033e"));
 	}
+	
 	
 	private Piece piece;
 
