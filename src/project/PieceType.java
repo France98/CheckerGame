@@ -2,7 +2,7 @@ package project;
 
 public enum PieceType {
 
-	BLACK(1), WHITE(-1);
+	BLACK(1), WHITE(-1), KBLACK(2) , KWHITE(-2);
 	
 	final int moveD;
 	

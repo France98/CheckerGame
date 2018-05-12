@@ -30,7 +30,7 @@ public class Piece extends StackPane {
 
         Ellipse ellipse = new Ellipse(100 * 0.3125, 100 * 0.26);
         ellipse.setFill(type == PieceType.BLACK
-                ? Color.valueOf("#000000") : Color.valueOf("#fff9f4"));
+                ? Color.valueOf("#000000") : type == PieceType.KWHITE ? Color.valueOf("#000000") : Color.valueOf("#fff9f4"));
 
         ellipse.setStroke(Color.BLACK);
         ellipse.setStrokeWidth(100 * 0.03);
@@ -54,6 +54,17 @@ public class Piece extends StackPane {
         oldX = x * 100;
         oldY = y * 100;
         relocate(oldX, oldY);
+    }
+    
+    public void setType(PieceType type){
+    	this.type = type;
+    	Ellipse ellipse = new Ellipse(100 * 0.3125, 100 * 0.26);
+        ellipse.setFill(type == PieceType.BLACK
+                ? Color.valueOf("#000000") : type == PieceType.KWHITE ? Color.valueOf("#000000") : Color.valueOf("#fff9f4"));
+
+        ellipse.setStroke(Color.BLACK);
+        getChildren().removeAll();
+        getChildren().addAll(ellipse);
     }
 
     public void abortMove() {

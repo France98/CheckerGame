@@ -1,5 +1,5 @@
 package project;
 
 public enum MoveType {
-	NONE,NORMAL,KILL
+	NONE,NORMAL,KILL,KMOVE
 }

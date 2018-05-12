@@ -9,128 +9,143 @@ import javafx.stage.Stage;
 
 public class CheckerApp extends Application {
 
-    public static final int TILESIZE = 100;
-    public static final int WIDTH = 8;
-    public static final int HEIGHT = 8;
-    boolean turn = false;
+	public static final int TILESIZE = 100;
+	public static final int WIDTH = 8;
+	public static final int HEIGHT = 8;
+	boolean turn = false;
 
-    private Tile[][] board = new Tile[WIDTH][HEIGHT];
+	private Tile[][] board = new Tile[WIDTH][HEIGHT];
 
-    private Group tileGroup = new Group();
-    private Group pieceGroup = new Group();
+	private Group tileGroup = new Group();
+	private Group pieceGroup = new Group();
 
-    private Parent createContent() {
-        Pane root = new Pane();
-        root.setPrefSize(WIDTH * TILESIZE, HEIGHT * TILESIZE);
-        root.getChildren().addAll(tileGroup, pieceGroup);
+	private Parent createContent() {
+		Pane root = new Pane();
+		root.setPrefSize(WIDTH * TILESIZE, HEIGHT * TILESIZE);
+		root.getChildren().addAll(tileGroup, pieceGroup);
 
-        for (int y = 0; y < HEIGHT; y++) {
-            for (int x = 0; x < WIDTH; x++) {
-                Tile tile = new Tile((x + y) % 2 == 0, x, y);
-                board[x][y] = tile;
+		for (int y = 0; y < HEIGHT; y++) {
+			for (int x = 0; x < WIDTH; x++) {
+				Tile tile = new Tile((x + y) % 2 == 0, x, y);
+				board[x][y] = tile;
 
-                tileGroup.getChildren().add(tile);
+				tileGroup.getChildren().add(tile);
 
-                Piece piece = null;
+				Piece piece = null;
 
-                if (y <= 2 && (x + y) % 2 != 0) {
-                    piece = makePiece(PieceType.BLACK, x, y);
-                }
+				if (y <= 2 && (x + y) % 2 != 0) {
+					piece = makePiece(PieceType.BLACK, x, y);
+				}
 
-                if (y >= 5 && (x + y) % 2 != 0) {
-                    piece = makePiece(PieceType.WHITE, x, y);
-                }
+				if (y >= 5 && (x + y) % 2 != 0) {
+					piece = makePiece(PieceType.WHITE, x, y);
+				}
 
-                if (piece != null) {
-                    tile.setPiece(piece);
-                    pieceGroup.getChildren().add(piece);
-                }
-            }
-        }
+				if (piece != null) {
+					tile.setPiece(piece);
+					pieceGroup.getChildren().add(piece);
+				}
+			}
+		}
 
-        return root;
-    }
+		return root;
+	}
 
-    private MoveResult tryMove(Piece piece, int newX, int newY) {
-    	
-        if (board[newX][newY].hasPiece() || (newX + newY) % 2 == 0) {
-            return new MoveResult(MoveType.NONE);
-        }
+	private MoveResult tryMove(Piece piece, int newX, int newY) {
 
-        int x0 = toBoard(piece.getOldX());
-        int y0 = toBoard(piece.getOldY());
+		if (board[newX][newY].hasPiece() || (newX + newY) % 2 == 0) {
+			return new MoveResult(MoveType.NONE);
+		}
 
-        if (Math.abs(newX - x0) == 1 && newY - y0 == piece.getType().moveD) {
-            return new MoveResult(MoveType.NORMAL);
-        } else if (Math.abs(newX - x0) == 2 && newY - y0 == piece.getType().moveD * 2) {
+		int x0 = toBoard(piece.getOldX());
+		int y0 = toBoard(piece.getOldY());
 
-            int x1 = x0 + (newX - x0) / 2;
-            int y1 = y0 + (newY - y0) / 2;
+		if (Math.abs(newX - x0) == 1 && newY - y0 == piece.getType().moveD) {
+			return new MoveResult(MoveType.NORMAL);
+		} else if (Math.abs(newX - x0) == 2 && newY - y0 == piece.getType().moveD * 2) {
 
-            if (board[x1][y1].hasPiece() && board[x1][y1].getPiece().getType() != piece.getType()) {
-                return new MoveResult(MoveType.KILL, board[x1][y1].getPiece());
-            }
-        }
+			int x1 = x0 + (newX - x0) / 2;
+			int y1 = y0 + (newY - y0) / 2;
 
-        return new MoveResult(MoveType.NONE);
-    }
+			if (board[x1][y1].hasPiece() && board[x1][y1].getPiece().getType() != piece.getType()) {
+				return new MoveResult(MoveType.KILL, board[x1][y1].getPiece());
+			}
+		}
 
-    private int toBoard(double pixel) {
-        return (int)(pixel + TILESIZE / 2) / TILESIZE;
-    }
+		return new MoveResult(MoveType.NONE);
+	}
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        Scene scene = new Scene(createContent());
-        primaryStage.setTitle("CheckersApp");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
+	private int toBoard(double pixel) {
+		return (int) (pixel + TILESIZE / 2) / TILESIZE;
+	}
 
-    private Piece makePiece(PieceType type, int x, int y) {
-        Piece piece = new Piece(type, x, y);
-        if(turn == false && piece.getType() == type.WHITE){
-        	piece.setOnMouseReleased(e -> {
-            	int newX = toBoard(piece.getLayoutX());
-            	int newY = toBoard(piece.getLayoutY());
-            	
-            	MoveResult result;
-            	
-            	if (newX < 0 || newY < 0 || newX >= WIDTH || newY >= HEIGHT) {
-            		result = new MoveResult(MoveType.NONE);
-            	} else {
-            		result = tryMove(piece, newX, newY);
-            	}
-            	
-            	int x0 = toBoard(piece.getOldX());
-            	int y0 = toBoard(piece.getOldY());
-            	
-            	switch (result.getType()) {
-            	case NONE:
-            		piece.abortMove();
-            		break;
-            	case NORMAL:
-            		piece.move(newX, newY);
-            		board[x0][y0].setPiece(null);
-            		board[newX][newY].setPiece(piece);
-            		break;
-            	case KILL:
-            		piece.move(newX, newY);
-            		board[x0][y0].setPiece(null);
-            		board[newX][newY].setPiece(piece);
-            		
-            		Piece otherPiece = result.getPiece();
-            		board[toBoard(otherPiece.getOldX())][toBoard(otherPiece.getOldY())].setPiece(null);
-            		pieceGroup.getChildren().remove(otherPiece);
-            		break;
-            	}
-            });
-        	turn = !turn;
-        }
-        return piece;
-    }
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		Scene scene = new Scene(createContent());
+		primaryStage.setTitle("CheckersApp");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	}
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+	private Piece makePiece(PieceType type, int x, int y) {
+		Piece piece = new Piece(type, x, y);
+		Piece king = new Piece(type.KWHITE, x, y);
+		Piece temp = piece;
+		piece.setOnMouseReleased(e -> {
+			int newX = toBoard(piece.getLayoutX());
+			int newY = toBoard(piece.getLayoutY());
+			if ((turn == false && piece.getType() == type.WHITE) || (turn == true && piece.getType() == type.BLACK)) {
+
+				MoveResult result;
+
+				if (newX < 0 || newY < 0 || newX >= WIDTH || newY >= HEIGHT) {
+					result = new MoveResult(MoveType.NONE);
+				} else {
+					result = tryMove(piece, newX, newY);
+				}
+
+				int x0 = toBoard(piece.getOldX());
+				int y0 = toBoard(piece.getOldY());
+
+				switch (result.getType()) {
+				case NONE:
+					piece.abortMove();
+					break;
+				case NORMAL:
+					piece.move(newX, newY);
+					board[x0][y0].setPiece(null);
+					if(newY == 7){
+						piece.setType(type.KWHITE);
+						board[newX][newY].setPiece(piece);
+					}else{
+						piece.setType(type.KWHITE);
+						board[x0][y0].setPiece(null);
+						board[newX][newY].setPiece(piece);
+					}
+					break;
+				case KILL:
+					piece.move(newX, newY);
+					board[x0][y0].setPiece(null);
+					board[newX][newY].setPiece(piece);
+
+					Piece otherPiece = result.getPiece();
+					board[toBoard(otherPiece.getOldX())][toBoard(otherPiece.getOldY())].setPiece(null);
+					pieceGroup.getChildren().remove(otherPiece);
+					break;
+				default:
+					break;
+				}
+				if (result.getType() != MoveType.NONE) {
+					turn = !turn;
+				}
+			} else {
+				piece.abortMove();
+			}
+		});
+		return piece;
+	}
+
+	public static void main(String[] args) {
+		launch(args);
+	}
 }
