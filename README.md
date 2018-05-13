@@ -18,11 +18,11 @@ Download Game [here](https://github.com/France98/CheckerGame/blob/master/Checker
 
 2. After that, you can click and drag the piece by start at white piece.
 
-![image](image/borad.PNG)
+![image](image/board.PNG)
 
 3. When you reach the king rows, the normal piece will change to king piece.
 
-![image](image/kind.PNG)
+![image](image/king.PNG)
 
 4. You can move King White backward and forward by 1 tile.
 
