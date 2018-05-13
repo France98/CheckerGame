@@ -1,13 +1,10 @@
 package project;
 
-import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 
-public class CheckerApp extends Application {
+public class CheckerApp{
 
 	public static final int TILESIZE = 100;
 	public static final int WIDTH = 8;
@@ -19,7 +16,7 @@ public class CheckerApp extends Application {
 	private Group tileGroup = new Group();
 	private Group pieceGroup = new Group();
 
-	private Parent createContent() {
+	public Parent createContent() {
 		Pane root = new Pane();
 		root.setPrefSize(WIDTH * TILESIZE, HEIGHT * TILESIZE);
 		root.getChildren().addAll(tileGroup, pieceGroup);
@@ -79,14 +76,6 @@ public class CheckerApp extends Application {
 
 	private int toBoard(double pixel) {
 		return (int) (pixel + TILESIZE / 2) / TILESIZE;
-	}
-
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		Scene scene = new Scene(createContent());
-		primaryStage.setTitle("CheckersApp");
-		primaryStage.setScene(scene);
-		primaryStage.show();
 	}
 
 	private Piece makePiece(PieceType type, int x, int y) {
@@ -168,7 +157,4 @@ public class CheckerApp extends Application {
 		return piece;
 	}
 
-	public static void main(String[] args) {
-		launch(args);
-	}
 }
