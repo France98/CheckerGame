@@ -4,6 +4,11 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 
+/**
+ * Create piece
+ * @author Phanuwatch Luangpradit
+ *
+ */
 public class Piece extends StackPane {
 
     private PieceType type;
@@ -12,22 +17,42 @@ public class Piece extends StackPane {
     private double oldX, oldY;
     boolean isKing = false;
 
+    /**
+     * Get type of piece
+     * @return type of piece
+     */
     public PieceType getType() {
         return type;
     }
     
+    /**
+     * Tell that piece is king or not
+     * @return false if it's not a king
+     */
     public boolean isKing(){
     	return isKing;
     }
 
+    /**
+     * Get old x position
+     */
     public double getOldX() {
         return oldX;
     }
 
+    /**
+     * Get old y position
+     */
     public double getOldY() {
         return oldY;
     }
 
+    /**
+     * Constructor that create the UI
+     * @param type
+     * @param x
+     * @param y
+     */
     public Piece(PieceType type, int x, int y) {
         this.type = type;
         move(x, y);
@@ -55,12 +80,20 @@ public class Piece extends StackPane {
         });
     }
 
+    /**
+     * Move piece
+     * @param x
+     * @param y
+     */
     public void move(int x, int y) {
         oldX = x * 100;
         oldY = y * 100;
         relocate(oldX, oldY);
     }
     
+    /**
+     * Change the normal piece to King piece
+     */
     public void setKing(){
     	getChildren().removeAll();
 
@@ -87,6 +120,9 @@ public class Piece extends StackPane {
         });
     }
 
+    /**
+     * back to old X and Y pposition
+     */
     public void abortMove() {
         relocate(oldX, oldY);
     }

@@ -4,6 +4,11 @@ import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
 
+/**
+ * Create the board and game
+ * @author Phanuwatch Luangpradit
+ *
+ */
 public class CheckerApp{
 
 	public static final int TILESIZE = 100;
@@ -16,6 +21,9 @@ public class CheckerApp{
 	private Group tileGroup = new Group();
 	private Group pieceGroup = new Group();
 
+	/**
+	 * Create board with piece
+	 */
 	public Parent createContent() {
 		Pane root = new Pane();
 		root.setPrefSize(WIDTH * TILESIZE, HEIGHT * TILESIZE);
@@ -48,6 +56,9 @@ public class CheckerApp{
 		return root;
 	}
 
+	/**
+	 * Move logic
+	 */
 	private MoveResult tryMove(Piece piece, int newX, int newY) {
 
 		if (board[newX][newY].hasPiece() || (newX + newY) % 2 == 0) {
@@ -78,6 +89,13 @@ public class CheckerApp{
 		return (int) (pixel + TILESIZE / 2) / TILESIZE;
 	}
 
+	/**
+	 * Make the piece and logic that what piece can do
+	 * @param type
+	 * @param x
+	 * @param y
+	 * @return
+	 */
 	private Piece makePiece(PieceType type, int x, int y) {
 		Piece piece = new Piece(type, x, y);
 		piece.setOnMouseReleased(e -> {

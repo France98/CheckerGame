@@ -5,6 +5,8 @@
 This game is played by two opponents. One player has dark pieces and the other has white pieces. Players alternate turns. Two player play in the same computer screen. Using mouse to drag and drop the pieces. This game has two kind of pieces. 
 One is the normal piece and the other is king piece. 
 
+URL Webpage [here](https://france98.github.io/CheckerGame/)
+
 Download Game [here](https://github.com/France98/CheckerGame/blob/master/Checker.jar)
 
 ## UML

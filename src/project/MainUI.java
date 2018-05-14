@@ -13,17 +13,28 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+/**
+ * MainUI class the run the UI
+ * @author Phanuwatch Luangpradit
+ *
+ */
 public class MainUI extends Application {
 
 	private Stage window;
 	private Scene scene1, scene2;
 	private CheckerApp checker;
 	
-
+	/**
+	 * Main method
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		launch(args);
 	}
 	
+	/**
+	 * Start the UI
+	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		checker = new CheckerApp();
